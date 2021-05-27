@@ -57,7 +57,7 @@ def lpips(input0, input1, model='net-lin', net='alex', version=0.1):
 
     input0_name, input1_name = '0:0', '1:0'
 
-    default_graph = tf.get_default_graph()
+    default_graph = tf.compat.v1.get_default_graph()
     producer_version = default_graph.graph_def_versions.producer
 
     cache_dir = os.path.join(os.path.expanduser("~"), '.lpips')
@@ -77,9 +77,9 @@ def lpips(input0, input1, model='net-lin', net='alex', version=0.1):
             break
 
     with open(os.path.join(cache_dir, pb_fname), 'rb') as f:
-        graph_def = tf.GraphDef()
+        graph_def = tf.compat.v1.GraphDef()
         graph_def.ParseFromString(f.read())
-        _ = tf.import_graph_def(graph_def,
+        _ = tf.compat.v1.import_graph_def(graph_def,
                                 input_map={input0_name: input0, input1_name: input1})
         distance, = default_graph.get_operations()[-1].outputs
 
